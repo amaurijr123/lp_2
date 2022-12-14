@@ -6,7 +6,7 @@ enum class PLANO{
     AMIL, UNIMED, AMS, ASSIM, GOLDEN, OUTRO, PARTICULAR
 }
 
- open class Contato(n: String, p: PLANO, tel: String, em: String) {
+ open class Contato(n: String, p: PLANO, tel: String, em: String) { //classe aberta para herança
 
      var nome: String = n
      var plano: PLANO = p
@@ -15,12 +15,12 @@ enum class PLANO{
 
  }
 
-class ContatoEmpresa(n: String, p: PLANO, tel: String, em: String, var nomeEmpresa: String, var cnpj: String) :
+class ContatoEmpresa(n: String, p: PLANO, tel: String, em: String, var nomeEmpresa: String, var cnpj: String) : //sub-classe de Contato
     Contato(n, p, tel, em) {
 }
 
 class Clientes{
-    private var clientes: MutableMap<Contato, LocalDate>
+    private var clientes: MutableMap<Contato, LocalDate> //modificado para MutableMap para ser possível a troca de elementos
 
     constructor(){
         this.clientes = HashMap()
@@ -31,27 +31,29 @@ class Clientes{
     }
 
     fun agendaCliente(contato: Contato, data: LocalDate){
-        if(clientes.containsKey(contato)){
-            if(clientes[contato]!!.isBefore(data)){
-                clientes[contato] = data
+        if(clientes.containsKey(contato)){  //procura se o Contato já existe no sistema
+            if(clientes[contato]!!.isBefore(data)){ //verifica se a data no sistema é anterior a data atual
+                clientes[contato] = data    //modifica a data para a data mais atual
                 //dbModify(contato,data)
             }
         }else{
-            clientes[contato] = data
+            clientes[contato] = data    //se não existir, insere o contato no sistema
             //dbInsert(contato,data)
         }
     }
 
     override fun toString(): String {
-        val entries = clientes.entries
+        val entries = clientes.entries //pega as entradas do Map
         var retString = ""
         entries.forEach { i ->
-            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()
-           println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString())
+            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString() //cria uma string com "Nome Dia/Mes" de todos os clientes
+           println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()) //printa a string "Nome Dia/Mes"
         }
         return retString
     }
 }
+
+/*Banco de Dados não finalizado */
 
 //fun dbInsert(cliente: Contato, dataAtual: LocalDate){
 //
@@ -107,6 +109,8 @@ class Clientes{
 //    val com = conexao.prepareStatement(sql)
 //    val result = com.executeUpdate()
 //}
+
+
 fun main() {
 
     //dbGet()
@@ -115,7 +119,7 @@ fun main() {
     val beltrano = ContatoEmpresa("Beltrano", PLANO.GOLDEN, "33333333", "beltrano@dominio.com", "UFF", "11111")
     clientes.agendaCliente(fulano, LocalDate.now())
     clientes.agendaCliente(beltrano, LocalDate.now())
-    clientes.agendaCliente(fulano, LocalDate.now())
+    //clientes.agendaCliente(fulano, LocalDate.of(2023,2,27))
     val rString = clientes.toString()
 
     }
