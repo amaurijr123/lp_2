@@ -29,7 +29,7 @@ class Clientes{
         this.clientes = clientes
     }
 
-    fun agendaCliente(contato: Contato, data: LocalDate){
+    fun agendaCliente(contato: Contato, data: LocalDate = LocalDate.now()){
         if(clientes.containsKey(contato)){  //procura se o Contato já existe no sistema
             if(clientes[contato]!!.isBefore(data)){ //verifica se a data no sistema é anterior a data atual
                 clientes[contato] = data    //modifica a data para a data mais atual
@@ -45,8 +45,8 @@ class Clientes{
         val entries = clientes.entries //pega as entradas do Map
         var retString = ""
         entries.forEach { i ->
-            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString() + " " //cria uma string com "Nome Dia/Mes" de todos os clientes
-           println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()) //printa a string "Nome Dia/Mes"
+            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString() + "\n" //cria uma string com "Nome Dia/Mes" de todos os clientes
+           //println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()) //printa a string "Nome Dia/Mes"
         }
         return retString
     }
@@ -116,9 +116,9 @@ fun main() {
     val clientes = Clientes()
     val fulano = Contato("Fulano", PLANO.PARTICULAR, "2222222", "fulano@dominio.com")
     val beltrano = ContatoEmpresa("Beltrano", PLANO.GOLDEN, "33333333", "beltrano@dominio.com", "UFF", "11111")
-    clientes.agendaCliente(fulano,LocalDate.now ())
-    clientes.agendaCliente(beltrano, LocalDate.now())
-    //clientes.agendaCliente(fulano, LocalDate.of(2023,2,27))
+    clientes.agendaCliente(fulano)
+    clientes.agendaCliente(beltrano)
+    clientes.agendaCliente(fulano, LocalDate.of(2023,2,27))
     val rString = clientes.toString()
-
+    println(rString)
     }
