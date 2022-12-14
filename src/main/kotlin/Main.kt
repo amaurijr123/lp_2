@@ -1,12 +1,11 @@
-import java.awt.desktop.OpenFilesEvent
-import java.beans.BeanProperty
 import java.time.*
-import java.io.*
 import java.sql.*
 
+//val conexao : Connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\amaur\\Documents\\Codigos\\TrabalhoLP2\\lp2.sqlite")
 enum class PLANO{
     AMIL, UNIMED, AMS, ASSIM, GOLDEN, OUTRO, PARTICULAR
 }
+
  open class Contato(n: String, p: PLANO, tel: String, em: String) {
 
      var nome: String = n
@@ -15,28 +14,37 @@ enum class PLANO{
      var email: String = em
 
  }
+
+class ContatoEmpresa(n: String, p: PLANO, tel: String, em: String, var nomeEmpresa: String, var cnpj: String) :
+    Contato(n, p, tel, em) {
+}
+
 class Clientes{
     private var clientes: MutableMap<Contato, LocalDate>
 
     constructor(){
         this.clientes = HashMap()
     }
+
     constructor(clientes: MutableMap<Contato, LocalDate>){
         this.clientes = clientes
     }
+
     fun agendaCliente(contato: Contato, data: LocalDate){
         if(clientes.containsKey(contato)){
             if(clientes[contato]!!.isBefore(data)){
                 clientes[contato] = data
+                //dbModify(contato,data)
             }
         }else{
             clientes[contato] = data
+            //dbInsert(contato,data)
         }
     }
 
     override fun toString(): String {
         val entries = clientes.entries
-        var retString : String = ""
+        var retString = ""
         entries.forEach { i ->
             retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()
            println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString())
@@ -45,42 +53,69 @@ class Clientes{
     }
 }
 
-class ContatoEmpresa(n: String, p: PLANO, tel: String, em: String, var nomeEmpresa: String, var CNPJ: String) :
-    Contato(n, p, tel, em) {
-}
-
-//fun dbInsert(conexao: Connection, cliente: Contato){
+//fun dbInsert(cliente: Contato, dataAtual: LocalDate){
 //
-//    if (cliente)
-//    val sql = """
-//        INSERT INTO Clientes(
-//        nome, plano, tel, email, n_emp, cnpj, data
-//        ) VALUES ($cliente.nome, $cliente.plano, $cliente.telefone, $cliente.email, $cliente. );
+//    val n = cliente.nome
+//    val p = cliente.plano.name
+//    val t = cliente.telefone
+//    val e = cliente.email
+//    val d = Date.valueOf(dataAtual)
+//    val sqlT = """
+//        SELECT(SELECT id FROM Clientes
+//        WHERE nome = 'Fulano') AS id;
 //    """.trimIndent()
-//    val query: PreparedStatement = conexao.prepareStatement(sql)
+//    var query: PreparedStatement = conexao.prepareStatement(sqlT)
 //    query.execute()
+//    val res = query.resultSet
+//    if(res) {
+//        val sql = """
+//            INSERT INTO Clientes(
+//            nome, plano, tel, email, data
+//            ) VALUES ('$n', '$p', '$t', '$e', $d);
+//        """.trimIndent()
+//        query = conexao.prepareStatement(sql)
+//        query.execute()
+//    }
 //}
 //
-//fun dbGet(conexao: Connection){
+//fun dbGet(){
 //
 //    val sql = "SELECT * FROM Clientes;"
 //    val clientes = conexao.prepareStatement(sql)
 //    val result = clientes.executeQuery()
 //    while(result.next()){
-//        val id = result.getInt(1)
+//        var id = result.getInt(1)
 //        val nome = result.getString(2)
-//        val data = result.getDate(3)
-//        Clientes().agendaCliente()
+//        val plano = result.getString(3)
+//        val tel = result.getString(4)
+//        val email = result.getString(5)
+//        val data = result.getDate(6)
+//
+//        val p : PLANO = PLANO.valueOf(plano)
+//        val d :LocalDate = data.toLocalDate()
+//        val contato = Contato(nome,p,tel,email)
+//        Clientes().agendaCliente(contato,d)
 //    }
+//}
+//
+//fun dbModify (contato : Contato, data: LocalDate){
+//    val sql = """
+//        UPDATE Clientes
+//        SET data = $data
+//        WHERE nome = ${contato.nome}
+//    """.trimIndent()
+//    val com = conexao.prepareStatement(sql)
+//    val result = com.executeUpdate()
 //}
 fun main() {
 
-    val conexao = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\amaur\\Documents\\Codigos\\TrabalhoLP2\\lp2.sqlite")
+    //dbGet()
     val clientes = Clientes()
     val fulano = Contato("Fulano", PLANO.PARTICULAR, "2222222", "fulano@dominio.com")
-    val beltrano = ContatoEmpresa("Beltrano", PLANO.GOLDEN, "33333333", "beltrano@dominion.com", "UFF", "11111")
+    val beltrano = ContatoEmpresa("Beltrano", PLANO.GOLDEN, "33333333", "beltrano@dominio.com", "UFF", "11111")
     clientes.agendaCliente(fulano, LocalDate.now())
     clientes.agendaCliente(beltrano, LocalDate.now())
+    clientes.agendaCliente(fulano, LocalDate.now())
     val rString = clientes.toString()
 
     }
