@@ -16,8 +16,7 @@ enum class PLANO{
  }
 
 class ContatoEmpresa(n: String, p: PLANO, tel: String, em: String, var nomeEmpresa: String, var cnpj: String) : //sub-classe de Contato
-    Contato(n, p, tel, em) {
-}
+    Contato(n, p, tel, em)
 
 class Clientes{
     private var clientes: MutableMap<Contato, LocalDate> //modificado para MutableMap para ser possível a troca de elementos
@@ -46,7 +45,7 @@ class Clientes{
         val entries = clientes.entries //pega as entradas do Map
         var retString = ""
         entries.forEach { i ->
-            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString() //cria uma string com "Nome Dia/Mes" de todos os clientes
+            retString += i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString() + " " //cria uma string com "Nome Dia/Mes" de todos os clientes
            println(i.key.nome + " " + i.value.dayOfMonth.toString() + "/" + i.value.monthValue.toString()) //printa a string "Nome Dia/Mes"
         }
         return retString
@@ -117,7 +116,7 @@ fun main() {
     val clientes = Clientes()
     val fulano = Contato("Fulano", PLANO.PARTICULAR, "2222222", "fulano@dominio.com")
     val beltrano = ContatoEmpresa("Beltrano", PLANO.GOLDEN, "33333333", "beltrano@dominio.com", "UFF", "11111")
-    clientes.agendaCliente(fulano, LocalDate.now())
+    clientes.agendaCliente(fulano,LocalDate.now ())
     clientes.agendaCliente(beltrano, LocalDate.now())
     //clientes.agendaCliente(fulano, LocalDate.of(2023,2,27))
     val rString = clientes.toString()
